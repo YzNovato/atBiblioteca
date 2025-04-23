@@ -1,0 +1,22 @@
+Primeiro erro- Problemas de variaveis mal definidas, once se utiliza apenas uma letra, isso acaba 
+deixando o codigo dificil de ler.Quando alguma outra pessoa ela ver seu código ela teria 
+dificuldade para entender. Isto ocorreu nas nas variaves  dos livros , emprestimos e usuarios.
+
+
+Segundo erro- Ocorre a quebra do principio de responsabilidade unica,
+onde a classe gerenciador de biblioteca esta fazendo diversas funçoes.
+
+
+Terceiro erro- Principio aberto/fechado no codigo acontece esse erro principlamente na parte 
+de notificações onde diversas classes ou funçoes tem a responsabilidade de enviar notificações
+ mas se incluirmos uma interface podemos arrumar esse problema.
+
+
+Quarto erro- Notamos que com a adição de interfaces, acontece um problema no 
+principio de segregação de interface. onde possui multiplas 
+interfaces, no qual podemos resolver criando uma nova interface que será responsavel por 
+aceitar as outras interface
+
+
+Quinto erro - Podemos notar uma falta de verificacao no acervo, para saber se o livro existe ou nao, 
+na parte de realizar devolucao
