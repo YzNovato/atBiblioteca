@@ -1,0 +1,246 @@
+using System;
+using System.Collections.Generic;
+using BibliotecaApp;
+
+
+namespace BibliotecaApp
+{
+    // Classe que faz tudo no sistema
+    public interface GerenciadorBiblioteca
+    {
+        public void(string destinatario, string assunto, string mensagem)
+    }
+   
+        private List<Livro> livros = new List<Livro>();
+        // Método que adiciona um livro
+        public void AdicionarLivro(string titulo, string autor, string isbn)
+        {
+            var livro  = new Livro();
+            livro.Titulo = titulo;
+            livro.Autor = autor;
+            livro.ISBN = isbn;
+            livro.Disponivel = true;
+            livros.Add(livro);
+            Console.WriteLine("Livro adicionado: " + titulo);
+        }      
+
+
+        public interface LivrosBiblioteca{
+            public void (string Livro)
+
+
+        }
+        public class Livro : LivrosBiblioteca
+        {
+        public string Titulo { get; set; }
+        public string Autor { get; set; }
+        public string ISBN { get; set; }
+        public bool Disponivel { get; set; }
+
+
+        public void <Livro> BuscarTodosLivros(Livro livro)
+        {
+            return livros;
+        }
+        }
+        // Método para buscar todos os livros
+
+
+       
+       // Classe de Livro
+   
+         public interface Usuariobiblioteca{  
+            public void (string Usuario)
+        }
+        // Classe de Usuário
+        public class Usuario : Usuariobiblioteca
+         {
+        public string Nome { get; set; }
+        public int ID { get; set; }
+
+
+        public void  List<Usuario> BuscarTodosUsuarios(Usuario usuario)
+        {
+            return usuarios;
+        }
+        }
+        // Método para buscar todos os usuários
+       
+       public interface emprestimosBiblioteca{
+           
+            public void (string Emprestimos)
+        }
+        public class Emprestimo : emprestimosBiblioteca
+    {
+        public Livro Livro { get; set; }
+        public Usuario Usuario { get; set; }
+        public DateTime DataEmprestimo { get; set; }
+        public DateTime DataDevolucaoPrevista { get; set; }
+        public DateTime? DataDevolucaoEfetiva { get; set; }
+
+
+         public class List<Emprestimo> BuscarTodosEmprestimos(Emprestimo emprestimo)
+        {
+            return emprestimos;
+        }
+   
+    }
+        // Método para buscar todos os empréstimos
+       
+    public class GerenciadorCadastros{
+        private List<Usuario> usuarios = new List<Usuario>();
+        // Método que adiciona um usuário
+        public void AdicionarUsuario(string nome, int id)
+        {
+            var usuario = new Usuario();
+            usuario.Nome = nome;
+            usuario.ID = id;
+            usuarios.Add(usuario);
+            Console.WriteLine("Usuário adicionado: " + nome);
+           
+            // Enviar email de boas-vindas
+            EnviarEmail(usuario.Nome, "Bem-vindo à Biblioteca", "Você foi cadastrado em nosso sistema!");
+        }
+    }
+
+
+    public interface Envionotificação
+    {
+        public void(string destinatario, string assunto, string mensagem)
+    }  
+    private class EnviarEmail(string destinatario, string assunto, string mensagem)
+        {
+            // Simulação de envio de e-mail
+            Console.WriteLine($"E-mail enviado para {destinatario}. Assunto: {assunto}");
+        }    
+    private class EnviarSMS(string destinatario, string mensagem)
+        {
+            // Simulação de envio de SMS
+            Console.WriteLine($"SMS enviado para {destinatario}: {mensagem}");
+        }
+        if (emprestimo != null)
+            {
+                emprestimo.DataDevolucaoEfetiva = DateTime.Now;
+                emprestimo.Livro.Disponivel = true;
+               
+                // Calcular multa (R$ 1,00 por dia de atraso)
+                double multa = 0;
+                if (DateTime.Now > emprestimo.DataDevolucaoPrevista)
+                {
+                    TimeSpan atraso = DateTime.Now - emprestimo.DataDevolucaoPrevista;
+                    multa = atraso.Days * 1.0;
+                   
+                    // Enviar email sobre multa
+                    EnviarEmail(emprestimo.Usuario.Nome, "Multa por Atraso",
+                        "Você tem uma multa de R$ " + multa);
+                }
+               
+                return multa;
+            }
+           
+            return -1; // Código de erro
+        }
+    }
+    public class GerenciadorEmprestimos{
+         // Método que realiza empréstimo
+
+
+        private List<Emprestimo> emprestimos = new List<Emprestimo>();
+        public bool RealizarEmprestimo(int usuarioId, string isbn, int diasEmprestimo)
+        {
+            var livro = livros.Find(livros => livros.ISBN == isbn);
+            var usuario = usuarios.Find(usuario => usuario.ID == usuarioId);
+           
+            if (livro != null && usuario != null && livro.Disponivel)
+            {
+                livro.Disponivel = false;
+                var emprestimo = new Emprestimo();
+                emprestimo.Livro = livro;
+                emprestimo.Usuario = usuario;
+                emprestimo.DataEmprestimo = DateTime.Now;
+                emprestimo.DataDevolucaoPrevista = DateTime.Now.AddDays(diasEmprestimo);
+                emprestimos.Add(emprestimo);
+               
+                EnviarEmail(usuario.Nome, "Empréstimo Realizado",
+                    "Você pegou emprestado o livro: " + livro.Titulo);
+               
+                EnviarSMS(usuario.Nome, "Empréstimo do livro: " + livro.Titulo);
+               
+                return true;
+            }
+        public double RealizarDevolucao(string isbn, int usuarioId)
+    {
+        var livro = _livroRepository.BuscarPorISBN(isbn);
+        var usuario = _usuarioRepository.BuscarPorId(usuarioId);
+        
+        if (livro == null || usuario == null)
+            throw new InvalidOperationException("Livro ou usuário não encontrado");
+
+        var emprestimo = _emprestimos.FirstOrDefault(e => 
+            e.Livro.ISBN == isbn && 
+            e.Usuario.ID == usuarioId && 
+            e.DataDevolucaoEfetiva == null);
+
+        if (emprestimo == null)
+            throw new InvalidOperationException("Empréstimo não encontrado ou já devolvido");
+
+        emprestimo.DataDevolucaoEfetiva = _dateTimeProvider.Now;
+        emprestimo.Livro.Disponivel = true;
+        _livroRepository.Atualizar(emprestimo.Livro);
+
+        double multa = CalcularMulta(emprestimo);
+        
+        if (multa > 0)
+        {
+            _notificacaoService.EnviarNotificacao(
+                usuario, 
+                $"Multa por atraso: R$ {multa}");
+        }
+
+        return multa;
+    }
+
+    private double CalcularMulta(Emprestimo emprestimo)
+    {
+        if (_dateTimeProvider.Now > emprestimo.DataDevolucaoPrevista)
+        {
+            var atraso = _dateTimeProvider.Now - emprestimo.DataDevolucaoPrevista;
+            return atraso.Days * 1.0;
+        }
+        return 0;
+    }
+       
+       
+   
+   
+   
+    // Classe de Empréstimo
+   
+   
+    // Classe Program para testar
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var biblioteca = new GerenciadorBiblioteca();
+           
+            // Adicionar livros
+            biblioteca.AdicionarLivro("Clean Code", "Robert C. Martin", "978-0132350884");
+            biblioteca.AdicionarLivro("Design Patterns", "Erich Gamma", "978-0201633610");
+           
+            // Adicionar usuários
+            biblioteca.AdicionarUsuario("João Silva", 1);
+            biblioteca.AdicionarUsuario("Maria Oliveira", 2);
+           
+            // Realizar empréstimo
+            biblioteca.RealizarEmprestimo(1, "978-0132350884", 7);
+           
+            // Realizar devolução (com atraso simulado)
+            // Note: Em uma aplicação real, você não manipularia as datas desta forma
+            double multa = biblioteca.RealizarDevolucao("978-0132350884", 1);
+            Console.WriteLine($"Multa por atraso: R$ {multa}");
+           
+            Console.ReadLine();
+        }
+    }
+}
